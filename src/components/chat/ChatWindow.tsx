@@ -1,0 +1,4 @@
+import { useState } from 'react';
+import { useGemini } from '../../hooks/useGemini';
+import { useSettingsStore } from '../../stores/settingsStore';
+export const ChatWindow = () => { const {apiKey,modelName}=useSettingsStore(); const [messages,setMessages]=useState<string[]>([]); const {loading,error,sendMessage}=useGemini(apiKey,modelName); const [text,setText]=useState(''); if(!apiKey) return <p>먼저 설정에서 Gemini API 키를 입력해주세요.</p>; return <section><h2>Gemini AI 코치</h2>{messages.map((m,i)=><p key={i}>{m}</p>)}<input disabled={loading} value={text} onChange={(e)=>setText(e.target.value)}/><button disabled={loading} onClick={async()=>{setMessages((s)=>[...s,`나: ${text}`]);let acc='';await sendMessage([],text,(c)=>{acc+=c;});setMessages((s)=>[...s,`AI: ${acc}`]);setText('');}}>전송</button>{loading&&<p>···</p>}{error&&<p>{error}</p>}</section>; };
