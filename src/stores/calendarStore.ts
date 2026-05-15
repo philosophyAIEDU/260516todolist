@@ -1,0 +1,3 @@
+import { create } from 'zustand'; import { persist } from 'zustand/middleware'; import type { CalendarEvent } from '../types';
+interface State { events: CalendarEvent[]; addEvent:(e:Omit<CalendarEvent,'id'>)=>void; updateEvent:(id:string,p:Partial<CalendarEvent>)=>void; deleteEvent:(id:string)=>void; }
+export const useCalendarStore=create<State>()(persist((set)=>({events:[],addEvent:(e)=>set((s)=>({events:[...s.events,{...e,id:crypto.randomUUID()}]})),updateEvent:(id,p)=>set((s)=>({events:s.events.map((e)=>e.id===id?{...e,...p}:e)})),deleteEvent:(id)=>set((s)=>({events:s.events.filter((e)=>e.id!==id)}))}),{name:'calendar-store'}));
