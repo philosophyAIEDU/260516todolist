@@ -1,0 +1,1 @@
+export const fileToBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = () => reject(new Error('이미지 변환 실패')); reader.readAsDataURL(file); });

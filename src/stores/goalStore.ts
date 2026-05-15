@@ -1,0 +1,3 @@
+import { create } from 'zustand'; import { persist } from 'zustand/middleware'; import type { Goal } from '../types';
+interface State { goals: Goal[]; addGoal:(g:Omit<Goal,'id'|'achieved'>)=>void; updateGoal:(id:string,p:Partial<Goal>)=>void; deleteGoal:(id:string)=>void; toggle:(id:string)=>void; }
+export const useGoalStore=create<State>()(persist((set)=>({goals:[],addGoal:(g)=>set((s)=>({goals:[...s.goals,{...g,id:crypto.randomUUID(),achieved:false}]})),updateGoal:(id,p)=>set((s)=>({goals:s.goals.map((g)=>g.id===id?{...g,...p}:g)})),deleteGoal:(id)=>set((s)=>({goals:s.goals.filter((g)=>g.id!==id)})),toggle:(id)=>set((s)=>({goals:s.goals.map((g)=>g.id===id?{...g,achieved:!g.achieved}:g)}))}),{name:'goal-store'}));
